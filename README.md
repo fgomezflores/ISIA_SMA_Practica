@@ -24,3 +24,28 @@ El entregable de la presente propuesta será el código de implementación del s
 Respecto a la tecnología que se empleará para la implementación de este sistema se opta por Netlogo ya que presenta una curva de aprendizaje rápido y mantiene un equilibrio entre el esfuerzo requerido para el desarrollo del modelo y su nivel de escalabilidad [1] que permita cumplir los objetivos en los plazos establecidos. 
 
 Respecto a los recursos software y hardware, el equipo en el que se ejecuta dicha herramienta es un ordenador portátil AMD FX-7600P Radeon R7, 12 Compute Cores 4C+8G 2.70 GHz con plataforma Windows 10 Home versión 21H2. 
+
+### 5.2 Estructura del modelo 
+
+El modelo se basa en una matriz compuesta por celdas de dimensión n filas por m columnas. Cada celda será transitable (o no), y en caso de serlo, tendrá una única dirección que facilitará la movilidad. 
+
+### 5.3 Tipología de agentes 
+
+Se contemplan dos tipos de agentes: 
+
+Vehículos, responsable de la creación e identificación de los coches que se desplazan por la cuadrícula. 
+
+Semáforos, responsable de los semáforos, donde, según su comportamiento binario permitirán el movimiento en una de las dos direcciones. 
+
+ 
+
+Interfaz de usuario gráfica, Texto, Aplicación, Chat o mensaje de texto
+
+Descripción generada automáticamente 
+
+### 5.4 Comportamiento básico de los agentes 
+
+Vehículo. Se puede definir el comportamiento de un vehículo con el siguiente diagrama de estados: 
+
+![image](https://github.com/fgomezflores/ISIA_SMA_Practica/assets/122975434/03e3b023-da35-41b2-a702-7c605b1a9bb8)
+
