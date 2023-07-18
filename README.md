@@ -15,7 +15,7 @@ El plazo para la realización del modelo es hasta el XX de septiembre de 2023. E
 
 ## 4. Entregable 
 
-El entregable de la presente propuesta será el código de implementación del sistema multiagente para la simulación del tráfico urbano. Además, este se presentará al equipo docente de forma práctica. 
+El entregable de la presente propuesta será el código de implementación del sistema multiagente para la simulación del XXXXXXXXX. Además, este se presentará al equipo docente de forma práctica. 
 
 ## 5. Descripción de las características generales del sistema 
 
