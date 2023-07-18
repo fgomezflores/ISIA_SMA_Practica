@@ -23,13 +23,13 @@ El entregable de la presente propuesta será el código de implementación del s
 
 Respecto a la tecnología que se empleará para la implementación de este sistema se opta por el marco de modelado Mesa para lenguaje Python. En los últimos años el citado lenguaje de programación ha adquirido gran popularidad [1] para modelos basados en agentes debido a su facilidad de uso, flexibilidad y amplio ecosistema de bibliotecas. Una de esas bibliotecas es Mesa, que  ofrece un amplio conjunto de herramientas y características para crear, simular y analizar SMA, lo que lo convierte en un recurso valioso para investigadores y profesionales interesados en modelar sistemas complejos.
 
+![image](https://github.com/fgomezflores/ISIA_SMA_Practica/assets/122975434/f7db729b-4e12-4651-80a4-262f55103969)
+
 Respecto a los recursos software y hardware, el equipo en el que se ejecuta dicha herramienta es un ordenador portátil AMD FX-7600P Radeon R7, 12 Compute Cores 4C+8G 2.70 GHz con plataforma Windows 10 Home versión 21H2. 
 
 ### 5.2 Estructura del modelo 
 
 El modelo se basa en una matriz compuesta por celdas de dimensión n filas por m columnas. Cada celda será transitable (o no), y en caso de serlo, tendrá una única dirección que facilitará la movilidad. 
-
-![image](https://github.com/fgomezflores/ISIA_SMA_Practica/assets/122975434/f7db729b-4e12-4651-80a4-262f55103969)
 
 
 ### 5.3 Tipología de agentes 
