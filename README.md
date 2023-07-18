@@ -21,7 +21,7 @@ El entregable de la presente propuesta será el código de implementación del s
 
 ### 5.1 Entorno tecnológico y recursos software 
 
-Respecto a la tecnología que se empleará para la implementación de este sistema se opta por el marco de modelado Mesa para Python ya que presenta una curva de aprendizaje rápido y mantiene un equilibrio entre el esfuerzo requerido para el desarrollo del modelo y su nivel de escalabilidad [1] que permita cumplir los objetivos en los plazos establecidos. 
+Respecto a la tecnología que se empleará para la implementación de este sistema se opta por el marco de modelado Mesa para lenguaje Python. El citado lenguaje de programación ha adquirido gran popularidad para modelos basados en agentes debido a su facilidad de uso, flexibilidad y amplio ecosistema de bibliotecas. Por su parte, Mesa ofrece un amplio conjunto de herramientas y características para crear, simular y analizar SMA, lo que lo convierte en un recurso valioso para investigadores y profesionales interesados en modelar sistemas complejos.
 
 Respecto a los recursos software y hardware, el equipo en el que se ejecuta dicha herramienta es un ordenador portátil AMD FX-7600P Radeon R7, 12 Compute Cores 4C+8G 2.70 GHz con plataforma Windows 10 Home versión 21H2. 
 
