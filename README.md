@@ -1,4 +1,4 @@
-# Propuesta de trabajo práctico para el desarrollo de un sistema multiagente para la simulación de XXXXX
+![image](https://github.com/fgomezflores/ISIA_SMA_Practica/assets/122975434/65b092d2-5288-42e9-9cef-63bc34733eb1)# Propuesta de trabajo práctico para el desarrollo de un sistema multiagente para la simulación de XXXXX
 
 ## 1. Introducción
 Esta propuesta se enmarca como trabajo práctico de la asignatura “Sistemas Multiagente” del Máster Universitario en Ingeniería del Software e Inteligencia Artificial de la Universidad de Málaga, en su convocatoria de septiembre. A continuación, se expone, entre otros asuntos el objetivo, plazo de realización, las características generales del sistema y la bibliografía que se utilizará en su realización. 
@@ -112,8 +112,12 @@ tsim	=	tiempo total de la simulación
 
 totalesp	=	suma total del número de segundos de espera de cada vehículo 
 
+### 5.7. Estructura del programa en Python
 
- 
+
+![image](https://github.com/fgomezflores/ISIA_SMA_Practica/assets/122975434/af04e24e-0021-482c-9f8f-f34e7aa74a9a)
+
+
 
 ## 6. Resultados  
 
@@ -137,3 +141,7 @@ Masad, D., & Kazil, J. (2015, July). MESA: an agent-based modeling framework. In
 
 Wai Foong, Ng (Nov 1, 2019). Introduction to Mesa: Agent-based Modeling in Python. Towards Data Science. [
 ](https://towardsdatascience.com/introduction-to-mesa-agent-based-modeling-in-python-bcb0596e1c9a)https://towardsdatascience.com/introduction-to-mesa-agent-based-modeling-in-python-bcb0596e1c9a
+
+Mesa: Agent-based modeling in Python 3+. https://mesa.readthedocs.io/en/stable/ ​
+
+Github – Project Mesa. https://github.com/projectmesa/mesa 
