@@ -117,6 +117,7 @@ totalesp	=	suma total del número de segundos de espera de cada vehículo
 
 ![image](https://github.com/fgomezflores/ISIA_SMA_Practica/assets/122975434/af04e24e-0021-482c-9f8f-f34e7aa74a9a)
 
+![image](https://github.com/fgomezflores/ISIA_SMA_Practica/assets/122975434/87b0c8a0-73bd-4e7e-b22c-3455271571fe)
 
 
 ## 6. Resultados  
