@@ -25,10 +25,11 @@ Respecto a la tecnología que se empleará para la implementación de este siste
 
 ![image](https://github.com/fgomezflores/ISIA_SMA_Practica/assets/122975434/f7db729b-4e12-4651-80a4-262f55103969)
 
-Respecto a los **recursos software y hardware**, el equipo en el que se ejecuta dicha herramienta es un ordenador portátil AMD FX-7600P Radeon R7, 12 Compute Cores 4C+8G 2.70 GHz con plataforma Windows 10 Home versión 21H2. Complementariamente se usa iMac Intel Core 2 Duo 3,06 GHz 8G con macOS High Sierra versión 10.13.6.
+Como IDE de programación se utiliza **PyCharm** 2023.1.2 (Community Edition).
 
-Por otro lado, se utiliza el IDE de programación **PyCharm** 2023.1.2 (Community Edition).
+El código está disponible en **Github** a través de la dirección [****](https://github.com/fgomezflores/ISIA_SMA_Practica). En esta plataforma se aloja el proyecto y se centralizan los cambios realizados.
 
+Por último, respecto a los **recursos hardware**, el equipo en el que se ejecuta dicha herramienta es un ordenador portátil AMD FX-7600P Radeon R7, 12 Compute Cores 4C+8G 2.70 GHz con plataforma Windows 10 Home versión 21H2. Complementariamente se usa iMac Intel Core 2 Duo 3,06 GHz 8G con macOS High Sierra versión 10.13.6.
 
 ### 5.2 Estructura del modelo 
 
