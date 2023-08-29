@@ -1,6 +1,7 @@
 import mesa
+from walker import Walker
 
-class Aeropuerto:
+class Aeropuerto(Walker):
     """
     Origen y destino de cada vuelo
     """
@@ -11,8 +12,15 @@ class Aeropuerto:
         # Crea las variables del agente y establece los valores inciales
         self.numero_pistas = 1
 
+    def step(self):
+        aeropuerto = Aeropuerto(
+            self.model.next_id(), self.pos, self.model, self.moore
+        )
+        self.model.grid.place_agent(aeropuerto, self.pos)
+        self.model.schedule.add(aeropuerto)
 
-class Avion:
+
+class Avion(Walker):
     """
     Avion que cubirá la misma ruta entre aeropuerto de salida y llegada
     """
