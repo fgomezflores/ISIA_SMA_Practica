@@ -6,10 +6,10 @@ from scheduler import RandomActivationByTypeFiltered
 class TraficoAereo(mesa.Model):
 
     height = 20
-    width = 20
+    width = 10
     dias = 5
-    aeropuertos = 75
-    aviones = 50
+    aeropuertos = 5
+    aviones = 5
     pistas_min = 1
     pistas_max = 3
     tiempo_despegue_aterrizaje = 2
@@ -24,11 +24,10 @@ class TraficoAereo(mesa.Model):
 
     def __init__(
         self,
-        height = 20,
-        width = 20,
+        cuadricula = 20,
         dias = 5,
-        aeropuertos_inicial = 75,
-        aviones_inicial = 50,
+        aeropuertos_inicial = 5,
+        aviones_inicial = 5,
         pistas_min = 1,
         pistas_max = 3,
         tiempo_despegue_aterrizaje = 2,
@@ -37,8 +36,7 @@ class TraficoAereo(mesa.Model):
     ):
         """
         Creación de un modelo para el tráfico aéreo para los siguientes parámetros
-        :param height: Alto de la cuadrícula del mundo virtual
-        :param width: Ancho de la cuadrícula del mundo virtual
+        :param cuadricula: Alto y ancho de la cuadrícula del mundo virtual
         :param dias: Número de días total que se simularán
         :param aeropuertos_inicial: Número de aeropuertos que se modelarán
         :param aviones_inicial: Número de aviones que se modelarán
@@ -53,8 +51,8 @@ class TraficoAereo(mesa.Model):
         super().__init__()
 
         # Se establecen los parámetros
-        self.height = height
-        self.width = width
+        self.height = cuadricula
+        self.width = cuadricula
         self.dias = dias
         self.aeropuertos_inicial = aeropuertos_inicial
         self.aviones_inicial = aviones_inicial

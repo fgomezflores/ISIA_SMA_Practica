@@ -33,12 +33,16 @@ chart_element = mesa.visualization.ChartModule(
 )
 
 model_params = {
-    # The following line is an example to showcase StaticText.
     "title": mesa.visualization.StaticText("Parámetros:"),
-    "aeropuertos_inicial": mesa.visualization.Slider(
-        "Aeropuertos inicial", 100, 10, 300
-    ),
-    "aviones_inicial": mesa.visualization.Slider("Aviones inicial", 50, 10, 300),
+    "cuadricula": mesa.visualization.Slider("Tamaño de la cuadrícula", 10, 10, 50),
+    "dias": mesa.visualization.Slider("Núm. días total", 5, 1, 10),
+    "aeropuertos_inicial": mesa.visualization.Slider("Núm. de aeropuertos", 5, 1, 50),
+    "aviones_inicial": mesa.visualization.Slider("Núm. de aviones", 5, 1, 50),
+    "pistas_min": mesa.visualization.Slider("Núm. pistas mínimo", 1, 1, 5),
+    "pistas_max": mesa.visualization.Slider("Núm. pistas máximo", 5, 1, 5),
+    "tiempo_despegue_aterrizaje": mesa.visualization.Slider("Tiempo transcurre despegue / aterrizaje", 2, 1, 5),
+    "velocidad_media": mesa.visualization.Slider("Velocidad media aeronave", 5, 1, 5),
+    "distancia_km": mesa.visualization.Slider("Distacia kms. de cada cuadrícula", 4, 1, 5),
 }
 
 server = mesa.visualization.ModularServer(
