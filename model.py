@@ -1,20 +1,16 @@
+import random
+
 import mesa
 
+import model
 from agents import Aeropuerto, Avion
 from scheduler import RandomActivationByTypeFiltered
 
+
 class TraficoAereo(mesa.Model):
 
-    height = 20
-    width = 10
-    dias = 5
-    aeropuertos = 5
-    aviones = 5
-    pistas_min = 1
-    pistas_max = 3
-    tiempo_despegue_aterrizaje = 2
-    velocidad_media = 4
-    distancia_km = 3
+    listado_aeropuertos = ""
+    listado_aviones = ""
 
     verbose = False  # Print-monitoring
 
@@ -23,16 +19,17 @@ class TraficoAereo(mesa.Model):
     )
 
     def __init__(
-        self,
-        cuadricula = 20,
-        dias = 5,
-        aeropuertos_inicial = 5,
-        aviones_inicial = 5,
-        pistas_min = 1,
-        pistas_max = 3,
-        tiempo_despegue_aterrizaje = 2,
-        velocidad_media = 4,
-        distancia_km = 3,
+            self,
+            cuadricula=20,
+            dias=5,
+            aeropuertos_inicial=5,
+            aviones_inicial=5,
+            pistas_min=1,
+            pistas_max=5,
+            tiempo_despegue_aterrizaje=2,
+            velocidad_media=4,
+            distancia_km=3,
+            control_colisiones=False,
     ):
         """
         Creación de un modelo para el tráfico aéreo para los siguientes parámetros
@@ -61,9 +58,10 @@ class TraficoAereo(mesa.Model):
         self.tiempo_despegue_aterrizaje = tiempo_despegue_aterrizaje
         self.velocidad_media = velocidad_media
         self.distancia_km = distancia_km
+        self.control_colisiones = control_colisiones
 
         self.schedule = RandomActivationByTypeFiltered(self)
-        #self.schedule = mesa.time.RandomActivation(self)
+        # self.schedule = mesa.time.RandomActivation(self)
         self.grid = mesa.space.MultiGrid(self.width, self.height, torus=True)
         self.datacollector = mesa.DataCollector(
             {
@@ -73,18 +71,38 @@ class TraficoAereo(mesa.Model):
         )
 
         # Creacion de los aeropuertos:
-        for i in range(self.aeropuertos):
-            x = self.random.randrange(self.width) # posicionamiento aleatorio
+        for i in range(self.aeropuertos_inicial):
+            x = self.random.randrange(self.width)  # posicionamiento aleatorio
             y = self.random.randrange(self.height)
-            aeropuerto = Aeropuerto(self.next_id(), (x,y), self, True)
-            self.grid.place_agent(aeropuerto, (x,y))
+            numero_pistas = random.randint(pistas_min, pistas_max)
+            tiempo_despegue_aterrizaje = tiempo_despegue_aterrizaje
+            aeropuerto = Aeropuerto(self.next_id(), (x, y), numero_pistas, tiempo_despegue_aterrizaje, self, False)
+            # Mostramos por consola las variables
+            print(aeropuerto.imprimir_agente())
+            self.listado_aeropuertos += aeropuerto.imprimir_agente() + '<br>'
+
+            self.grid.place_agent(aeropuerto, (x, y))
             self.schedule.add(aeropuerto)
 
         # Creacion de los aviones:
-        for i in range(self.aviones):
-            x = self.random.randrange(self.width)  # posicionamiento aleatorio
-            y = self.random.randrange(self.height)
-            avion = Avion(self.next_id(), (x, y), self, True)
+        for i in range(self.aviones_inicial):
+            # Seleccion de aeropuerto salida y llegada
+            salida = self.random.randint(1, aeropuertos_inicial)
+            # Determinación aeropuerto de llegada distinto que el de salida
+            llegada = self.random.randint(1, aeropuertos_inicial)
+            while llegada == salida:
+                llegada = self.random.randint(1, aeropuertos_inicial)
+            # posicionamiento según aeropuerto de salida
+            #x = self.random.randrange(self.width)  # posicionamiento aleatorio
+            #y = self.random.randrange(self.height)
+            x = self.schedule._agents[salida].pos[0]
+            y = self.schedule._agents[salida].pos[1]
+            avion = Avion(self.next_id(), (x, y), salida, llegada, tiempo_despegue_aterrizaje, self, False)
+
+            # Mostramos por consola las variables
+            print(avion.imprimir_agente())
+            self.listado_aviones += avion.imprimir_agente() + "<br>"
+
             self.grid.place_agent(avion, (x, y))
             self.schedule.add(avion)
 
