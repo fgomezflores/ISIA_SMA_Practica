@@ -8,9 +8,10 @@ from scheduler import RandomActivationByTypeFiltered
 
 
 class TraficoAereo(mesa.Model):
-
+    # Variables con texto que se mostrará en la visualización HTML del modelo
     listado_aeropuertos = ""
     listado_aviones = ""
+    mensaje_html = "Sin incidencias"
 
     verbose = False  # Print-monitoring
 
@@ -27,6 +28,7 @@ class TraficoAereo(mesa.Model):
             pistas_min=1,
             pistas_max=5,
             tiempo_despegue_aterrizaje=2,
+            tiempo_espera_avion=1,
             velocidad_media=4,
             distancia_km=3,
             control_colisiones=False,
@@ -56,6 +58,7 @@ class TraficoAereo(mesa.Model):
         self.pistas_min = pistas_min
         self.pistas_max = pistas_max
         self.tiempo_despegue_aterrizaje = tiempo_despegue_aterrizaje
+        self.tiempo_espera_avion = tiempo_espera_avion
         self.velocidad_media = velocidad_media
         self.distancia_km = distancia_km
         self.control_colisiones = control_colisiones
@@ -74,9 +77,9 @@ class TraficoAereo(mesa.Model):
         for i in range(self.aeropuertos_inicial):
             x = self.random.randrange(self.width)  # posicionamiento aleatorio
             y = self.random.randrange(self.height)
-            numero_pistas = random.randint(pistas_min, pistas_max)
+            pistas = random.randint(pistas_min, pistas_max)
             tiempo_despegue_aterrizaje = tiempo_despegue_aterrizaje
-            aeropuerto = Aeropuerto(self.next_id(), (x, y), numero_pistas, tiempo_despegue_aterrizaje, self, False)
+            aeropuerto = Aeropuerto(self.next_id(), (x, y), pistas, tiempo_despegue_aterrizaje, self, False)
             # Mostramos por consola las variables
             print(aeropuerto.imprimir_agente())
             self.listado_aeropuertos += aeropuerto.imprimir_agente() + '<br>'
@@ -86,19 +89,37 @@ class TraficoAereo(mesa.Model):
 
         # Creacion de los aviones:
         for i in range(self.aviones_inicial):
-            # Seleccion de aeropuerto salida y llegada
+            # Seleccion de aeropuerto salida
             salida = self.random.randint(1, aeropuertos_inicial)
+            # Comprobamos que tiene pistas diponibles
+            pistas_salida_disponibles = self.schedule._agents[salida].pistas_disponibles
+            tmp = aviones_inicial
+            while pistas_salida_disponibles == 0 and tmp >= 0:
+                salida = self.random.randint(1, aeropuertos_inicial)
+                pistas_salida_disponibles = self.schedule._agents[salida].pistas_disponibles
+                tmp -= 1
+            if tmp < 0:
+                aviso = "Hay más aviones que pistas disponibles, y no se pueden poner en la cuadricula. " +\
+                        "Ajuste los parámetros para un correcta ejecución del modelo"
+                print(aviso)
+                self.mensaje_html = aviso
+                break
+
+            self.schedule._agents[salida].pistas_disponibles -= 1  # Pista ocupada del aeropuerto de salida
+
+            #print("PISTAS AEROPUERTO: " + str(salida) + " - Pistas: " + str(self.schedule._agents[salida].pistas) +
+            #      " - Disponibles: " + str(self.schedule._agents[salida].pistas_disponibles))
+
             # Determinación aeropuerto de llegada distinto que el de salida
             llegada = self.random.randint(1, aeropuertos_inicial)
             while llegada == salida:
                 llegada = self.random.randint(1, aeropuertos_inicial)
-            # posicionamiento según aeropuerto de salida
-            #x = self.random.randrange(self.width)  # posicionamiento aleatorio
-            #y = self.random.randrange(self.height)
+            # posicionamiento según aeropuerto de salida que se le ha asignado
             x = self.schedule._agents[salida].pos[0]
             y = self.schedule._agents[salida].pos[1]
-            avion = Avion(self.next_id(), (x, y), salida, llegada, tiempo_despegue_aterrizaje, self, False)
-
+            x_llegada = self.schedule._agents[llegada].pos[0]
+            y_llegada = self.schedule._agents[llegada].pos[1]
+            avion = Avion(self.next_id(), (x, y), salida, llegada, (x_llegada, y_llegada), tiempo_espera_avion, False)
             # Mostramos por consola las variables
             print(avion.imprimir_agente())
             self.listado_aviones += avion.imprimir_agente() + "<br>"

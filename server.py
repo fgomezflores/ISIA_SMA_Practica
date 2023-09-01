@@ -11,6 +11,9 @@ def obtener_listado_aeropuertos(model):
 def obtener_listado_aviones(model):
     return f"<b>Listado de Aviones:</b> <br> {model.listado_aviones}"
 
+def obtener_mensaje_html(model):
+    return f"<b>Avisos:</b> <br> {model.mensaje_html}"
+
 def TraficoAereoRepresentacion(agent):
 
     if agent is None:
@@ -54,13 +57,14 @@ model_params = {
     "aeropuertos_inicial": mesa.visualization.Slider("Núm. de aeropuertos", 5, 1, 10),
     "aviones_inicial": mesa.visualization.Slider("Núm. de aviones", 5, 1, 10),
     "pistas_min": mesa.visualization.Slider("Núm. pistas mínimo", 1, 1, 5),
-    "pistas_max": mesa.visualization.Slider("Núm. p istas máximo", 5, 1, 5),
+    "pistas_max": mesa.visualization.Slider("Núm. pistas máximo", 5, 1, 5),
     "tiempo_despegue_aterrizaje": mesa.visualization.Slider("Tiempo transcurre despegue / aterrizaje", 2, 1, 5),
+    "tiempo_espera_avion": mesa.visualization.Slider("Tiempo de espera del avion", 1, 1, 5),
     "velocidad_media": mesa.visualization.Slider("Velocidad media aeronave", 5, 1, 5),
     "distancia_km": mesa.visualization.Slider("Distacia kms. de cada cuadrícula", 4, 1, 5),
 }
 
 server = mesa.visualization.ModularServer(
-    TraficoAereo, [canvas_element, chart_element, obtener_listado_aeropuertos, obtener_listado_aviones], "Simulación del Tráfico Aéreo", model_params
+    TraficoAereo, [canvas_element, chart_element, obtener_mensaje_html, obtener_listado_aeropuertos, obtener_listado_aviones], "Simulación del Tráfico Aéreo", model_params
 )
 server.port = 8521

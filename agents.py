@@ -18,19 +18,23 @@ class Aeropuerto(Walker):
     Origen y destino de cada vuelo
     """
 
-    def __init__(self, unique_id, pos, numero_pistas, tiempo_despegue_aterrizaje, model, moore):
+    def __init__(self, unique_id, pos, pistas, tiempo_despegue_aterrizaje, model, moore):
         # Pasa los parámetros a la clase padre
         super().__init__(unique_id, pos, model, moore)
         # Crea las variables del agente y establece los valores inciales
         self.id = unique_id  # Identificador del aeropuerto
         self.pos = pos
-        self.numero_pistas = numero_pistas
+        self.pistas = pistas
+        self.pistas_disponibles = pistas
         self.tiempo_despegue_aterrizaje = tiempo_despegue_aterrizaje
 
     def imprimir_agente(self):
-        return "AEROPUERTO ID: "+ str(self.id) + " | Num. pistas: " + str(self.numero_pistas) +\
+        return "AEROPUERTO ID: "+ str(self.id) + " | Num. pistas: " + str(self.pistas) +\
             " | Tiempo desp/aterr.: " + str(self.tiempo_despegue_aterrizaje) +\
             " | Coord.: " + str(self.pos)
+
+    def step(self):
+        return None
 
 
 class Avion(Walker):
@@ -38,7 +42,7 @@ class Avion(Walker):
     Avion que cubirá la misma ruta entre aeropuerto de salida y llegada
     """
 
-    def __init__(self, unique_id, pos, salida, llegada, tiempo_espera, model, moore=False):
+    def __init__(self, unique_id, pos, salida, llegada, pos_llegada, tiempo_espera, model, moore=False):
         # Pasa los parámetros a la clase padre
         super().__init__(unique_id, pos, model, moore)
         # Crea las variables del agente y establece los valores inciales
@@ -46,6 +50,7 @@ class Avion(Walker):
         self.pos = pos
         self.salida = salida
         self.llegada = llegada
+        self.pos_llegada = pos_llegada
         self.tiempo_espera = tiempo_espera
 
     def step(self):
@@ -54,4 +59,4 @@ class Avion(Walker):
     def imprimir_agente(self):
         return "AVION ID: " + str(self.id) + " | Salida: " + str(self.salida) + " | Llegada: " +\
             str(self.llegada) + " | Tiempo espera: " + str(self.tiempo_espera) +\
-            " | Coord.: " + str(self.pos)
+            " | Coord. salida: " + str(self.pos) + " | Coord. llegada: " + str(self.pos_llegada)
