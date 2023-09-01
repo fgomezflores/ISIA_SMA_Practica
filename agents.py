@@ -46,15 +46,19 @@ class Avion(Walker):
         # Pasa los parámetros a la clase padre
         super().__init__(unique_id, pos, model, moore)
         # Crea las variables del agente y establece los valores inciales
-        self.id = unique_id
-        self.pos = pos
-        self.salida = salida
-        self.llegada = llegada
-        self.pos_llegada = pos_llegada
+        self.id = unique_id # id del avion
+        self.salida = salida # aeropuero de salida
+        self.llegada = llegada # aeropuerto de llegada
+        self.pos = pos # posicion del avion
+        self.pos_salida = pos  # posicion de aeropuerto de llegada
+        self.pos_llegada = pos_llegada # posicion de aeropuerto de llegada
         self.tiempo_espera = tiempo_espera
+        # true: vuelo aeropuerto de salida -> llegada
+        # false: vuelo aeropuerto de llegada -> salida
+        self.viaje_ida = True
 
     def step(self):
-        self.random_move()
+        self.volar_aeropuerto()
 
     def imprimir_agente(self):
         return "AVION ID: " + str(self.id) + " | Salida: " + str(self.salida) + " | Llegada: " +\

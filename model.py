@@ -65,7 +65,8 @@ class TraficoAereo(mesa.Model):
 
         self.schedule = RandomActivationByTypeFiltered(self)
         # self.schedule = mesa.time.RandomActivation(self)
-        self.grid = mesa.space.MultiGrid(self.width, self.height, torus=True)
+        # Indicamos que el grid tenga la propiedad torus a false
+        self.grid = mesa.space.MultiGrid(self.width, self.height, torus=False)
         self.datacollector = mesa.DataCollector(
             {
                 "Aeropuertos": lambda m: m.schedule.get_type_count(Aeropuerto),
@@ -119,7 +120,7 @@ class TraficoAereo(mesa.Model):
             y = self.schedule._agents[salida].pos[1]
             x_llegada = self.schedule._agents[llegada].pos[0]
             y_llegada = self.schedule._agents[llegada].pos[1]
-            avion = Avion(self.next_id(), (x, y), salida, llegada, (x_llegada, y_llegada), tiempo_espera_avion, False)
+            avion = Avion(self.next_id(), (x, y), salida, llegada, (x_llegada, y_llegada), tiempo_espera_avion, self, False)
             # Mostramos por consola las variables
             print(avion.imprimir_agente())
             self.listado_aviones += avion.imprimir_agente() + "<br>"

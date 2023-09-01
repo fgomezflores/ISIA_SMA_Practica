@@ -1,8 +1,22 @@
 """
 Comportamiento generalizado para caminar por la cuadrícula, una celda a la vez.
 """
-
+import math
 import mesa
+
+
+def get_distance(pos_1, pos_2):
+    """Get the distance between two point
+    Distancia Euclidea entre dos puntos
+
+    Args:
+        pos_1, pos_2: Coordinate tuples for both points.
+    """
+    x1, y1 = pos_1
+    x2, y2 = pos_2
+    dx = x1 - x2
+    dy = y1 - y2
+    return math.sqrt(dx ** 2 + dy ** 2)
 
 class Walker(mesa.Agent):
     """
@@ -26,6 +40,42 @@ class Walker(mesa.Agent):
         super().__init__(unique_id, model)
         self.pos = pos
         self.moore = moore
+
+    def esta_ocupado(self, pos):
+        this_cell = self.model.grid.get_cell_list_contents([pos])
+        return any(isinstance(agent, Walker) for agent in this_cell)
+
+    def volar_aeropuerto(self):
+        # Si es viaje de ida se vuela aeropuerto de salida -> llegada
+        # Sino llegada -> salida
+        if self.viaje_ida:
+            next_moves = self.model.grid.get_neighborhood(self.pos_llegada, self.moore, True)
+        else:
+            next_moves = self.model.grid.get_neighborhood(self.pos_salida, self.moore, True)
+
+        # Reducir a los más cercanos
+        min_dist = min(get_distance(self.pos, pos) for pos in next_moves)
+        if min_dist > 0:
+            while min_dist > 0:
+                final_candidates = [
+                    pos for pos in next_moves if get_distance(self.pos, pos) == min_dist
+                ]
+                next_move = final_candidates[0]
+                next_moves = self.model.grid.get_neighborhood(next_move, self.moore, True)
+                min_dist = min(get_distance(self.pos, pos) for pos in next_moves)
+
+            self.model.grid.move_agent(self, next_move)
+            self.pos = next_move
+        elif min_dist == 0: # ha llegado
+            if self.viaje_ida: # vuelo salida -> llegada
+                self.model.grid.move_agent(self, self.pos_llegada)
+                self.pos = self.pos_llegada
+                self.viaje_ida = False
+            else: # vuelo llegada -> salida
+                self.model.grid.move_agent(self, self.pos_salida)
+                self.pos = self.pos_salida
+                self.viaje_ida = True
+
 
     def random_move(self):
         """
