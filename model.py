@@ -90,14 +90,14 @@ class TraficoAereo(mesa.Model):
 
         # Creacion de los aviones:
         for i in range(self.aviones_inicial):
-            # Seleccion de aeropuerto salida
-            salida = self.random.randint(1, aeropuertos_inicial)
+            # Seleccion de aeropuerto origen
+            origen = self.random.randint(1, aeropuertos_inicial)
             # Comprobamos que tiene pistas diponibles
-            pistas_salida_disponibles = self.schedule._agents[salida].pistas_disponibles
+            pistas_origen_disponibles = self.schedule._agents[origen].pistas_disponibles
             tmp = aviones_inicial
-            while pistas_salida_disponibles == 0 and tmp >= 0:
-                salida = self.random.randint(1, aeropuertos_inicial)
-                pistas_salida_disponibles = self.schedule._agents[salida].pistas_disponibles
+            while pistas_origen_disponibles == 0 and tmp >= 0:
+                origen = self.random.randint(1, aeropuertos_inicial)
+                pistas_origen_disponibles = self.schedule._agents[origen].pistas_disponibles
                 tmp -= 1
             if tmp < 0:
                 aviso = "Hay más aviones que pistas disponibles, y no se pueden poner en la cuadricula. " +\
@@ -106,21 +106,21 @@ class TraficoAereo(mesa.Model):
                 self.mensaje_html = aviso
                 break
 
-            self.schedule._agents[salida].pistas_disponibles -= 1  # Pista ocupada del aeropuerto de salida
+            self.schedule._agents[origen].pistas_disponibles -= 1  # Pista ocupada del aeropuerto de origen
 
-            #print("PISTAS AEROPUERTO: " + str(salida) + " - Pistas: " + str(self.schedule._agents[salida].pistas) +
-            #      " - Disponibles: " + str(self.schedule._agents[salida].pistas_disponibles))
+            #print("PISTAS AEROPUERTO: " + str(origen) + " - Pistas: " + str(self.schedule._agents[origen].pistas) +
+            #      " - Disponibles: " + str(self.schedule._agents[origen].pistas_disponibles))
 
-            # Determinación aeropuerto de llegada distinto que el de salida
-            llegada = self.random.randint(1, aeropuertos_inicial)
-            while llegada == salida:
-                llegada = self.random.randint(1, aeropuertos_inicial)
-            # posicionamiento según aeropuerto de salida que se le ha asignado
-            x = self.schedule._agents[salida].pos[0]
-            y = self.schedule._agents[salida].pos[1]
-            x_llegada = self.schedule._agents[llegada].pos[0]
-            y_llegada = self.schedule._agents[llegada].pos[1]
-            avion = Avion(self.next_id(), (x, y), salida, llegada, (x_llegada, y_llegada), tiempo_espera_avion, self, False)
+            # Determinación aeropuerto de destino distinto que el de origen
+            destino = self.random.randint(1, aeropuertos_inicial)
+            while destino == origen:
+                destino = self.random.randint(1, aeropuertos_inicial)
+            # posicionamiento según aeropuerto de origen que se le ha asignado
+            x = self.schedule._agents[origen].pos[0]
+            y = self.schedule._agents[origen].pos[1]
+            x_destino = self.schedule._agents[destino].pos[0]
+            y_destino = self.schedule._agents[destino].pos[1]
+            avion = Avion(self.next_id(), (x, y), origen, destino, (x_destino, y_destino), tiempo_espera_avion, self, False)
             # Mostramos por consola las variables
             print(avion.imprimir_agente())
             self.listado_aviones += avion.imprimir_agente() + "<br>"

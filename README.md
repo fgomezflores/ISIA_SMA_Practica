@@ -55,7 +55,7 @@ Leyenda:
 
 tsem	=	tiempo de espera del semáforo. 
 
-tdesp	=	tiempo de espera cuando se llega a casilla sin salida. 
+tdesp	=	tiempo de espera cuando se llega a casilla sin origen. 
 
 tret	=	tiempo de espera cuando hay retención. 
 

@@ -6,11 +6,12 @@ import mesa
 
 
 def get_distance(pos_1, pos_2):
-    """Get the distance between two point
-    Distancia Euclidea entre dos puntos
+    """
+    Obtiene la distancia entre dos puntos según
+    la distancia Euclidea entre dos puntos
 
     Args:
-        pos_1, pos_2: Coordinate tuples for both points.
+        pos_1, pos_2: Coodenadas de las tuplas de ambos puntos
     """
     x1, y1 = pos_1
     x2, y2 = pos_2
@@ -46,12 +47,12 @@ class Walker(mesa.Agent):
         return any(isinstance(agent, Walker) for agent in this_cell)
 
     def volar_aeropuerto(self):
-        # Si es viaje de ida se vuela aeropuerto de salida -> llegada
-        # Sino llegada -> salida
+        # Si es viaje de ida se vuela aeropuerto de origen -> destino
+        # Sino destino -> origen
         if self.viaje_ida:
-            next_moves = self.model.grid.get_neighborhood(self.pos_llegada, self.moore, True)
+            next_moves = self.model.grid.get_neighborhood(self.pos_destino, self.moore, True)
         else:
-            next_moves = self.model.grid.get_neighborhood(self.pos_salida, self.moore, True)
+            next_moves = self.model.grid.get_neighborhood(self.pos_origen, self.moore, True)
 
         # Reducir a los más cercanos
         min_dist = min(get_distance(self.pos, pos) for pos in next_moves)
@@ -67,13 +68,13 @@ class Walker(mesa.Agent):
             self.model.grid.move_agent(self, next_move)
             self.pos = next_move
         elif min_dist == 0: # ha llegado
-            if self.viaje_ida: # vuelo salida -> llegada
-                self.model.grid.move_agent(self, self.pos_llegada)
-                self.pos = self.pos_llegada
+            if self.viaje_ida: # vuelo origen -> destino
+                self.model.grid.move_agent(self, self.pos_destino)
+                self.pos = self.pos_destino
                 self.viaje_ida = False
-            else: # vuelo llegada -> salida
-                self.model.grid.move_agent(self, self.pos_salida)
-                self.pos = self.pos_salida
+            else: # vuelo destino -> origen
+                self.model.grid.move_agent(self, self.pos_origen)
+                self.pos = self.pos_origen
                 self.viaje_ida = True
 
 
