@@ -72,10 +72,12 @@ class Walker(mesa.Agent):
                 self.model.grid.move_agent(self, self.pos_destino)
                 self.pos = self.pos_destino
                 self.viaje_ida = False
+                self.en_vuelo = False
             else: # vuelo destino -> origen
                 self.model.grid.move_agent(self, self.pos_origen)
                 self.pos = self.pos_origen
                 self.viaje_ida = True
+                self.en_vuelo = False
 
 
     def random_move(self):

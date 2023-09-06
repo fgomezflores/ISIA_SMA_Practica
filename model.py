@@ -1,17 +1,18 @@
 import random
-
 import mesa
-
-import model
 from agents import Aeropuerto, Avion
-from scheduler import RandomActivationByTypeFiltered
 
+def calcular_kms(model):
+    agent_wealths = [agent.id for agent in model.schedule.agents]
+    x = sorted(agent_wealths)
+    N = model.aeropuertos_inicial
+    B = sum(xi * (N - i) for i, xi in enumerate(x)) / (N * sum(x))
+    return 1 + (1 / N) - 2 * B
 
 class TraficoAereo(mesa.Model):
     # Variables con texto que se mostrará en la visualización HTML del modelo
     listado_aeropuertos = ""
     listado_aviones = ""
-    mensaje_html = "Sin incidencias"
 
     verbose = False  # Print-monitoring
 
@@ -22,15 +23,15 @@ class TraficoAereo(mesa.Model):
     def __init__(
             self,
             cuadricula=20,
-            dias=5,
+            dias=1,
             aeropuertos_inicial=5,
             aviones_inicial=5,
             pistas_min=1,
-            pistas_max=5,
+            pistas_max=1,
             tiempo_despegue_aterrizaje=2,
-            tiempo_espera_avion=1,
+            tiempo_espera_avion=2,
             velocidad_media=4,
-            distancia_km=3,
+            distancia_km=100,
             control_colisiones=False,
     ):
         """
@@ -45,6 +46,7 @@ class TraficoAereo(mesa.Model):
                 (es siempre el mismo para todas las pistas de todos los aeropuertos)
         :param velocidad_media: Velocidad media de cada aeronave en km/min
         :param distancia_km: Distancia en kilómetros de cada cuadrícula
+        :param control_colisiones: Controla la posibilidad de que dos o más aviones colisionen en el aire
         """
 
         super().__init__()
@@ -63,16 +65,19 @@ class TraficoAereo(mesa.Model):
         self.distancia_km = distancia_km
         self.control_colisiones = control_colisiones
 
-        self.schedule = RandomActivationByTypeFiltered(self)
-        # self.schedule = mesa.time.RandomActivation(self)
+        self.schedule = mesa.time.RandomActivation(self)
+
         # Indicamos que el grid tenga la propiedad torus a false
         self.grid = mesa.space.MultiGrid(self.width, self.height, torus=False)
         self.datacollector = mesa.DataCollector(
             {
-                "Aeropuertos": lambda m: m.schedule.get_type_count(Aeropuerto),
-                "Aviones": lambda m: m.schedule.get_type_count(Avion),
+                "Aviones": calcular_kms,
             }
         )
+
+        # Numero total de días
+        # self.countdown = self.dias * 1440  # minutos que tiene un día
+        self.countdown = self.dias * 100  # minutos que tiene un día
 
         # Creacion de los aeropuertos:
         for i in range(self.aeropuertos_inicial):
@@ -90,28 +95,9 @@ class TraficoAereo(mesa.Model):
 
         # Creacion de los aviones:
         for i in range(self.aviones_inicial):
-            # Seleccion de aeropuerto origen
+            # Seleccion de aeropuerto origen de forma aleatoria
             origen = self.random.randint(1, aeropuertos_inicial)
-            # Comprobamos que tiene pistas diponibles
-            pistas_origen_disponibles = self.schedule._agents[origen].pistas_disponibles
-            tmp = aviones_inicial
-            while pistas_origen_disponibles == 0 and tmp >= 0:
-                origen = self.random.randint(1, aeropuertos_inicial)
-                pistas_origen_disponibles = self.schedule._agents[origen].pistas_disponibles
-                tmp -= 1
-            if tmp < 0:
-                aviso = "Hay más aviones que pistas disponibles, y no se pueden poner en la cuadricula. " +\
-                        "Ajuste los parámetros para un correcta ejecución del modelo"
-                print(aviso)
-                self.mensaje_html = aviso
-                break
-
-            self.schedule._agents[origen].pistas_disponibles -= 1  # Pista ocupada del aeropuerto de origen
-
-            #print("PISTAS AEROPUERTO: " + str(origen) + " - Pistas: " + str(self.schedule._agents[origen].pistas) +
-            #      " - Disponibles: " + str(self.schedule._agents[origen].pistas_disponibles))
-
-            # Determinación aeropuerto de destino distinto que el de origen
+            # Seleccion aeropuerto de destino distinto que el de origen
             destino = self.random.randint(1, aeropuertos_inicial)
             while destino == origen:
                 destino = self.random.randint(1, aeropuertos_inicial)
@@ -132,22 +118,22 @@ class TraficoAereo(mesa.Model):
         self.datacollector.collect(self)
 
     def step(self):
-        self.schedule.step()
-        # Recogida de los datos
-        self.datacollector.collect(self)
-        if self.verbose:
-            print(
-                [
-                    self.schedule.time,
-                    self.schedule.get_type_count(Aeropuerto),
-                    self.schedule.get_type_count(Avion),
-                ]
-            )
 
-    def run_model(self, step_count=200):
-        if self.verbose:
-            print("Número de aeropuertos: ", self.schedule.get_type_count(Aeropuerto))
-            print("Número de aviones : ", self.schedule.get_type_count(Avion))
+        if self.schedule.time < self.countdown:
+            self.schedule.step()
+            # Recogida de los datos
+            self.datacollector.collect(self)
+            if self.verbose:
+                print(
+                    [
+                        self.schedule.time,
+                        self.schedule.get_type_count(Aeropuerto),
+                        self.schedule.get_type_count(Avion),
+                    ]
+                )
+        else:
+            # Se termina la simulacion
+            print("--------> FIN DE LA SIMULACION")
+            exit()
 
-        for i in range(step_count):
-            self.step()
+
