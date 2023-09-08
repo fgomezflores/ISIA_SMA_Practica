@@ -1,24 +1,43 @@
 import random
 import mesa
+
 from agents import Aeropuerto, Avion
 
+VERBOSE = False # Print-monitoring
+
 def calcular_kms(model):
-    agent_wealths = [agent.id for agent in model.schedule.agents]
-    x = sorted(agent_wealths)
-    N = model.aeropuertos_inicial
-    B = sum(xi * (N - i) for i, xi in enumerate(x)) / (N * sum(x))
-    return 1 + (1 / N) - 2 * B
+    agent_kms = 0
+    for a in model.schedule.agents:
+        if type(a) is Avion:
+            agent_kms += a.kms_recorridos
+    # return the sum of agents' savings
+    return agent_kms
+
+def calcular_tiempo(model):
+    agent_tiempo = 0
+    for a in model.schedule.agents:
+        if type(a) is Avion:
+            agent_tiempo += a.tiempo_vuelo
+    # return the sum of agents' savings
+    return agent_tiempo
 
 class TraficoAereo(mesa.Model):
     # Variables con texto que se mostrará en la visualización HTML del modelo
     listado_aeropuertos = ""
     listado_aviones = ""
 
-    verbose = False  # Print-monitoring
+    verbose = VERBOSE  # Print-monitoring
 
     description = (
-        "Modelo para la simulación del tráfico aéreo."
+        "Modelo para la simulación del tráfico aéreo"
     )
+
+
+    # VELOCIDAD MÍNIMA Y MAXIMA DEL AVIÓN
+    VELOCIDAD_MIN = 500
+    VELOCIDAD_MAX = 1000
+    # DISTANCIA KM CUADRICULA
+    DISTANCIA_KM = 750
 
     def __init__(
             self,
@@ -30,9 +49,10 @@ class TraficoAereo(mesa.Model):
             pistas_max=1,
             tiempo_despegue_aterrizaje=2,
             tiempo_espera_avion=2,
-            velocidad_media=4,
-            distancia_km=100,
+            velocidad_media=int((VELOCIDAD_MIN+VELOCIDAD_MAX)/2),
+            distancia_km=DISTANCIA_KM,
             control_colisiones=False,
+            velocidad_diferente = False,
     ):
         """
         Creación de un modelo para el tráfico aéreo para los siguientes parámetros
@@ -47,6 +67,7 @@ class TraficoAereo(mesa.Model):
         :param velocidad_media: Velocidad media de cada aeronave en km/min
         :param distancia_km: Distancia en kilómetros de cada cuadrícula
         :param control_colisiones: Controla la posibilidad de que dos o más aviones colisionen en el aire
+        :param velocidad_diferente: Cada avión tendrá una velocidad diferente
         """
 
         super().__init__()
@@ -63,7 +84,8 @@ class TraficoAereo(mesa.Model):
         self.tiempo_espera_avion = tiempo_espera_avion
         self.velocidad_media = velocidad_media
         self.distancia_km = distancia_km
-        self.control_colisiones = control_colisiones
+        self.control_colisiones = control_colisiones # booleano
+        self.velocidad_diferente = velocidad_diferente # booleano
 
         self.schedule = mesa.time.RandomActivation(self)
 
@@ -71,13 +93,13 @@ class TraficoAereo(mesa.Model):
         self.grid = mesa.space.MultiGrid(self.width, self.height, torus=False)
         self.datacollector = mesa.DataCollector(
             {
-                "Aviones": calcular_kms,
+                "Kms recorridos": calcular_kms,
+                "Tiempo empleado": calcular_tiempo,
             }
         )
 
         # Numero total de días
-        # self.countdown = self.dias * 1440  # minutos que tiene un día
-        self.countdown = self.dias * 100  # minutos que tiene un día
+        self.countdown = self.dias * 1440  # minutos que tiene un día
 
         # Creacion de los aeropuertos:
         for i in range(self.aeropuertos_inicial):
@@ -106,7 +128,18 @@ class TraficoAereo(mesa.Model):
             y = self.schedule._agents[origen].pos[1]
             x_destino = self.schedule._agents[destino].pos[0]
             y_destino = self.schedule._agents[destino].pos[1]
-            avion = Avion(self.next_id(), (x, y), origen, destino, (x_destino, y_destino), tiempo_espera_avion, self, False)
+            # Velocidad: valor distancia cuadricula / velocidad del avion
+            velocidad = 0
+            # Si velocidad = 1 el avión recorre en 1 min la distancia de la cuadricula
+            # Si velocidad > 1 el avión no recorre en 1 minuto la distancia de la cuadricula
+            # Si velocidad < 1 el avión recorre antes de 1 minuto la distancia de la cuadrícula
+            if self.velocidad_diferente:
+                # Para calcular la velocidad diferente, se opta por un número aleatorio
+                # entre 50 y 150, valores minimo y máximo del slider en la visualizacion
+                velocidad = round(self.DISTANCIA_KM / random.randrange(self.VELOCIDAD_MIN, self.VELOCIDAD_MAX), 1)
+            else:
+                velocidad = round(self.DISTANCIA_KM / self.velocidad_media, 1)
+            avion = Avion(self.next_id(), (x, y), origen, destino, (x_destino, y_destino), tiempo_espera_avion, velocidad, self.DISTANCIA_KM, self, False)
             # Mostramos por consola las variables
             print(avion.imprimir_agente())
             self.listado_aviones += avion.imprimir_agente() + "<br>"

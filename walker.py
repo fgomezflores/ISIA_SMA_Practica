@@ -4,7 +4,6 @@ Comportamiento generalizado para caminar por la cuadrícula, una celda a la vez.
 import math
 import mesa
 
-
 def get_distance(pos_1, pos_2):
     """
     Obtiene la distancia entre dos puntos según
@@ -79,13 +78,3 @@ class Walker(mesa.Agent):
                 self.viaje_ida = True
                 self.en_vuelo = False
 
-
-    def random_move(self):
-        """
-        Step one cell in any allowable direction.
-        """
-        # Pick the next cell from the adjacent cells.
-        next_moves = self.model.grid.get_neighborhood(self.pos, self.moore, True)
-        next_move = self.random.choice(next_moves)
-        # Now move:
-        self.model.grid.move_agent(self, next_move)
