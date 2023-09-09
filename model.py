@@ -88,6 +88,7 @@ class TraficoAereo(mesa.Model):
         self.velocidad_diferente = velocidad_diferente # booleano
 
         self.schedule = mesa.time.RandomActivation(self)
+        #self.schedule = mesa.time.StagedActivation(self)
 
         # Indicamos que el grid tenga la propiedad torus a false
         self.grid = mesa.space.MultiGrid(self.width, self.height, torus=False)
@@ -130,7 +131,7 @@ class TraficoAereo(mesa.Model):
             y_destino = self.schedule._agents[destino].pos[1]
             # Velocidad: valor distancia cuadricula / velocidad del avion
             velocidad = 0
-            # Si velocidad = 1 el avión recorre en 1 min la distancia de la cuadricula
+            # Si velocidad = 1 el avión recorre en 1 min (1 step) la distancia de la cuadricula
             # Si velocidad > 1 el avión no recorre en 1 minuto la distancia de la cuadricula
             # Si velocidad < 1 el avión recorre antes de 1 minuto la distancia de la cuadrícula
             if self.velocidad_diferente:
@@ -139,7 +140,7 @@ class TraficoAereo(mesa.Model):
                 velocidad = round(self.DISTANCIA_KM / random.randrange(self.VELOCIDAD_MIN, self.VELOCIDAD_MAX), 1)
             else:
                 velocidad = round(self.DISTANCIA_KM / self.velocidad_media, 1)
-            avion = Avion(self.next_id(), (x, y), origen, destino, (x_destino, y_destino), tiempo_espera_avion, velocidad, self.DISTANCIA_KM, self, False)
+            avion = Avion(self.next_id(), (x, y), origen, destino, (x_destino, y_destino), tiempo_espera_avion, velocidad, self.DISTANCIA_KM, self.control_colisiones, self, False)
             # Mostramos por consola las variables
             print(avion.imprimir_agente())
             self.listado_aviones += avion.imprimir_agente() + "<br>"

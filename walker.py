@@ -45,7 +45,7 @@ class Walker(mesa.Agent):
         this_cell = self.model.grid.get_cell_list_contents([pos])
         return any(isinstance(agent, Walker) for agent in this_cell)
 
-    def volar_aeropuerto(self):
+    def volar_aeropuerto(self, velocidad, control_colisiones):
         # Si es viaje de ida se vuela aeropuerto de origen -> destino
         # Sino destino -> origen
         if self.viaje_ida:
@@ -55,6 +55,7 @@ class Walker(mesa.Agent):
 
         # Reducir a los más cercanos
         min_dist = min(get_distance(self.pos, pos) for pos in next_moves)
+        # Si hay distancia minima calculamos el camino
         if min_dist > 0:
             while min_dist > 0:
                 final_candidates = [
@@ -64,9 +65,11 @@ class Walker(mesa.Agent):
                 next_moves = self.model.grid.get_neighborhood(next_move, self.moore, True)
                 min_dist = min(get_distance(self.pos, pos) for pos in next_moves)
 
+            # Como es 0, lo movemos a esta posicion
             self.model.grid.move_agent(self, next_move)
             self.pos = next_move
-        elif min_dist == 0: # ha llegado
+        # Si la distancia minima es 0 es que ha llegado
+        elif min_dist == 0:
             if self.viaje_ida: # vuelo origen -> destino
                 self.model.grid.move_agent(self, self.pos_destino)
                 self.pos = self.pos_destino

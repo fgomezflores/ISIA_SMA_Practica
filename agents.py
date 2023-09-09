@@ -31,6 +31,7 @@ class Aeropuerto(Walker):
             " | Tiempo desp/aterr.: " + str(self.tiempo_despegue_aterrizaje) +\
             " | Coord.: " + str(self.pos)
 
+    # Función que ejecuta el agente al moverse
     def step(self):
         if self.countdown < 0:
             # Listado de agentes en el aeropuerto
@@ -61,7 +62,7 @@ class Avion(Walker):
 
     verbose = VERBOSE  # Print-monitoring
 
-    def __init__(self, unique_id, pos, origen, destino, pos_destino, tiempo_espera, velocidad, distancia_km, model, moore=False):
+    def __init__(self, unique_id, pos, origen, destino, pos_destino, tiempo_espera, velocidad, distancia_km, control_colisiones, model, moore=False):
         # Pasa los parámetros a la clase padre
         super().__init__(unique_id, pos, model, moore)
         # Crea las variables del agente y establece los valores inciales
@@ -88,7 +89,9 @@ class Avion(Walker):
         self.distancia_km = distancia_km
         self.kms_recorridos = 0
         self.tiempo_vuelo = 0
+        self.control_colisiones = control_colisiones
 
+    # Función que ejecuta el agente al moverse
     def step(self):
         # Según el tipo de vuelo se selecciona el id del aeropuerto
         # El procedimiento volar_aeropuerto() del modelo actualiza esta variable (en walker.py)
@@ -134,11 +137,15 @@ class Avion(Walker):
             # Este procedimiento ya controla si es ida o vuelta
             # y actualiza el valor de la variable self.viaje_ida
 
-            t = Timer(self.velocidad, self.volar_aeropuerto)
-            t.start()
-            #self.volar_aeropuerto()
+            # t = Timer(self.velocidad, self.volar_aeropuerto)
+            # t.start()
+
+            # Función que hace que se mueva el agente
+            self.volar_aeropuerto(self.velocidad, self.control_colisiones)
             self.kms_recorridos += self.distancia_km
             self.tiempo_vuelo += self.velocidad # es un ratio distancia / velocidad
+
+
 
     def imprimir_agente(self):
         return "AVION ID: " + str(self.id) + " | origen: " + str(self.origen) + " | destino: " +\
