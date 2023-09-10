@@ -28,20 +28,20 @@ Como IDE de programación se utiliza **PyCharm** 2023.1.2 (Community Edition).
 
 El código está disponible en **GitHub** a través de la dirección [****](https://github.com/fgomezflores/ISIA_SMA_Practica). En esta plataforma se aloja el proyecto y se centralizan los cambios realizados.
 
-Por último, respecto a los **recursos hardware**, el equipo en el que se ejecuta dicha herramienta es un ordenador portátil AMD FX-7600P Radeon R7, 12 Compute Cores 4C+8G 2.70 GHz con plataforma Windows 10 Home versión 21H2. Complementariamente se usa iMac Intel Core 2 Duo 3,06 GHz 8G con macOS High Sierra versión 10.13.6.
+Por último, respecto a los **recursos hardware**, el equipo en el que se ejecuta dicha herramienta es un ordenador portátil AMD FX-7600P Radeon R7, 12 Compute Cores 4C+8G 2.70 GHz con plataforma Windows 10 Home versión 21H2. 
 
 ### 5.2 Estructura del modelo 
 
-El modelo se basa en una matriz compuesta por celdas de dimensión n filas por m columnas. Cada celda será transitable (o no), y en caso de serlo, tendrá una única dirección que facilitará la movilidad. 
+El modelo se basa en sistema de coordenadas cartesianas, donde se ubicarán los agentes que se indican a continuación.
 
 
 ### 5.3 Tipología de agentes 
 
 Se contemplan dos tipos de agentes: 
 
-Vehículos, responsable de la creación e identificación de los coches que se desplazan por la cuadrícula. 
+1) Aeropuertos, son el origen y destino de cada vuelo. 
 
-Semáforos, responsable de los semáforos, donde, según su comportamiento binario permitirán el movimiento en una de las dos direcciones. 
+2) Aviones, cada avión cubrirá siempre la misma ruta entre los aeropuertos de salida y llegada. Así, una vez que el avión llegue a su destino, transcurrido un determinado tiempo, realizará la ruta de vuelta y así sucesivamente durante toda la simulación 
 
 ![image](https://github.com/fgomezflores/ISIA_SMA_Practica/assets/122975434/03e3b023-da35-41b2-a702-7c605b1a9bb8)
 
