@@ -33,7 +33,7 @@ class TraficoAereo(mesa.Model):
 
     def __init__(
             self,
-            cuadricula=20,
+            cuadricula = 20,
             dias=1,
             aeropuertos_inicial=5,
             aviones_inicial=5,

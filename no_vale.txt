@@ -17,3 +17,19 @@
 
         print("PISTAS AEROPUERTO: " + str(origen) + " - Pistas: " + str(self.schedule._agents[origen].pistas) +
              " - Disponibles: " + str(self.schedule._agents[origen].pistas_disponibles))
+
+
+
+
+# while True:
+#   try:
+#     cuadricula = input("Enter a number between 10 and 30: ")
+#     if cuadricula.isdigit():
+#        cuadricula=int(cuadricula)
+#     else:
+#        raise ValueError()
+#     if 10 <= cuadricula <= 30:
+#         break
+#     raise ValueError()
+#   except ValueError:
+#     print("Input must be an integer between 10 and 30.")
