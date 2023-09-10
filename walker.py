@@ -41,19 +41,27 @@ class Walker(mesa.Agent):
         self.pos = pos
         self.moore = moore
 
+    # Comprueba si una celda de la cuadrícula está ya ocupada
+    # por otro agente tipo Avión
     def esta_ocupado(self, pos):
+        from agents import Avion
         this_cell = self.model.grid.get_cell_list_contents([pos])
-        return any(isinstance(agent, Walker) for agent in this_cell)
+        ret = any(isinstance(agent, Avion)
+                  for agent in this_cell
+                  )
+        return ret
 
     def volar_aeropuerto(self, velocidad, control_colisiones):
+
         # Si es viaje de ida se vuela aeropuerto de origen -> destino
         # Sino destino -> origen
+
         if self.viaje_ida:
             next_moves = self.model.grid.get_neighborhood(self.pos_destino, self.moore, True)
         else:
             next_moves = self.model.grid.get_neighborhood(self.pos_origen, self.moore, True)
 
-        # Reducir a los más cercanos
+        # Reducir posiciones de la cuadricula a los más cercanos
         min_dist = min(get_distance(self.pos, pos) for pos in next_moves)
         # Si hay distancia minima calculamos el camino
         if min_dist > 0:
@@ -66,6 +74,20 @@ class Walker(mesa.Agent):
                 min_dist = min(get_distance(self.pos, pos) for pos in next_moves)
 
             # Como es 0, lo movemos a esta posicion
+
+            # Comprobamos si ya esta ocupado para evitar colision si
+            # esta activado este parametro (solo en ruta, no se tiene en cuenta en aeropuerto)
+            if self.control_colisiones:
+                # Comprobamos que el siguente movimiento no es un avion
+                # y que no se corresponde con el origen o destino (por si hay más aviones estacionados)
+                if self.esta_ocupado(next_move) and self.pos_origen != next_move and self.pos_destino != next_move:
+                    next_moves_colision = self.model.grid.get_neighborhood(self.pos, self.moore, True)
+                    final_candidates_colision = [
+                        pos for pos in next_moves_colision if not self.esta_ocupado(pos)
+                    ]
+                    next_move = final_candidates_colision[0]
+                    print("POSIBLE COLISION DEL AVION "+ str(self.unique_id) + " --> Cambio de ruta de pos: " + str(self.pos) + " a " + str(next_move))
+
             self.model.grid.move_agent(self, next_move)
             self.pos = next_move
         # Si la distancia minima es 0 es que ha llegado

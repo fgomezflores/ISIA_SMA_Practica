@@ -41,14 +41,12 @@ def TraficoAereoRepresentacion(agent):
 canvas_element = mesa.visualization.CanvasGrid(TraficoAereoRepresentacion, 20, 20, 500, 500)
 chart_element = mesa.visualization.ChartModule(
     [
-        {"Label": "Kms recorridos", "Color": "Red"},
         {"Label": "Tiempo empleado", "Color": "Blue"},
     ]
 )
 
 model_params = {
     "title": mesa.visualization.StaticText("Parámetros:"),
-    "control_colisiones": mesa.visualization.Checkbox("Control de colisiones", False),
     "cuadricula": mesa.visualization.Slider("Tamaño de la cuadrícula", 20, 10, 30),
     "dias": mesa.visualization.Slider("Núm. días total", 1, 1, 5),
     "aeropuertos_inicial": mesa.visualization.Slider("Núm. de aeropuertos", 5, 1, 10),
@@ -61,6 +59,7 @@ model_params = {
                                                  int((TraficoAereo.VELOCIDAD_MIN+TraficoAereo.VELOCIDAD_MAX)/2),
                                                  TraficoAereo.VELOCIDAD_MIN, TraficoAereo.VELOCIDAD_MAX, 100),
     "velocidad_diferente": mesa.visualization.Checkbox("Cada avión tendrá velocidad diferente", False),
+    "control_colisiones": mesa.visualization.Checkbox("Control de colisiones", False),
     "distancia_km": mesa.visualization.Slider("Distacia kms. de cada cuadrícula", TraficoAereo.DISTANCIA_KM, 500, 1500, 50),
 }
 

@@ -12,9 +12,9 @@ class Aeropuerto(Walker):
 
     verbose = VERBOSE  # Print-monitoring
 
-    def __init__(self, unique_id, pos, pistas, tiempo_despegue_aterrizaje, model, moore):
+    def __init__(self, unique_id, pos, pistas, tiempo_despegue_aterrizaje, model):
         # Pasa los parámetros a la clase padre
-        super().__init__(unique_id, pos, model, moore)
+        super().__init__(unique_id, pos, model)
         # Crea las variables del agente y establece los valores inciales
         self.id = unique_id  # Identificador del aeropuerto
         self.pos = pos
@@ -25,13 +25,7 @@ class Aeropuerto(Walker):
         self.countdown = tiempo_despegue_aterrizaje # inciamos contador tipo cuenta atrás para poder asignar pista
         self.avion_autorizado = -1
 
-
-    def imprimir_agente(self):
-        return "AEROPUERTO ID: "+ str(self.id) + " | Num. pistas: " + str(self.pistas) +\
-            " | Tiempo desp/aterr.: " + str(self.tiempo_despegue_aterrizaje) +\
-            " | Coord.: " + str(self.pos)
-
-    # Función que ejecuta el agente al moverse
+     # Función que ejecuta el agente al moverse
     def step(self):
         if self.countdown < 0:
             # Listado de agentes en el aeropuerto
@@ -53,6 +47,12 @@ class Aeropuerto(Walker):
             if self.verbose:
                 print("Countdown del AEROPUERTO " + str(self.id) + " tiempo de espera " + str(self.countdown))
             self.countdown -= 1
+
+   # Devuelve cadena con los principales datos del aeropuerto para mostrar por pantalla
+    def imprimir_agente(self):
+        return "AEROPUERTO ID: "+ str(self.id) + " | Num. pistas: " + str(self.pistas) +\
+            " | Tiempo desp/aterr.: " + str(self.tiempo_despegue_aterrizaje) +\
+            " | Coord.: " + str(self.pos)
 
 
 class Avion(Walker):
@@ -87,7 +87,6 @@ class Avion(Walker):
         self.en_vuelo = False
         self.velocidad = velocidad
         self.distancia_km = distancia_km
-        self.kms_recorridos = 0
         self.tiempo_vuelo = 0
         self.control_colisiones = control_colisiones
 
@@ -100,7 +99,7 @@ class Avion(Walker):
         else:
             id_aeropuerto = self.destino
 
-        # Tiempo de espera del avion completado, está en el aeropuerto y
+        # 1. Tiempo de espera del avion completado, está en el aeropuerto y
         # no ha solicitado todavía la autorización al aeropuerto
         if self.countdown <= 0 and not self.en_vuelo and not self.autorizacion_solicitada:
             if self.pista_asignada == -1:
@@ -114,12 +113,12 @@ class Avion(Walker):
                                " -> Solicita despegue/aterrizaje - Viaje de ida: " + str(self.viaje_ida))
                     # Se solicita autorizacion despegue / aterrizaje
                     self.autorizacion_solicitada = True
-        # Descuento del contador de espera del avion
+        # 2. Descuento del contador de espera del avion
         elif self.countdown > 0 and not self.en_vuelo and not self.autorizacion_solicitada:
             if self.verbose:
                 print("Countdown del AVION " + str(self.id) + " en AEROPUERTO " + str(id_aeropuerto) + " tiempo de espera " + str(self.countdown))
             self.countdown -= 1
-        # Tiempo de espera del avion completado, está en el aeropuerto y
+        # 3. Tiempo de espera del avion completado, está en el aeropuerto y
         # sí ha solicitado todavía la autorización al aeropuerto
         elif self.countdown <= 0 and not self.en_vuelo and self.autorizacion_solicitada:
             if self.model.schedule._agents[id_aeropuerto].avion_autorizado == self.id:
@@ -132,21 +131,15 @@ class Avion(Walker):
                 self.countdown = self.tiempo_espera
                 self.pista_asignada = -1
                 self.model.schedule._agents[id_aeropuerto].pistas_disponibles += 1
-        # Se encuentra en trayecto (no está en aeropuerto)
+        # 4. Se encuentra en trayecto (no está en aeropuerto)
         elif self.en_vuelo:
+            # Función que hace que se mueva el agente
             # Este procedimiento ya controla si es ida o vuelta
             # y actualiza el valor de la variable self.viaje_ida
-
-            # t = Timer(self.velocidad, self.volar_aeropuerto)
-            # t.start()
-
-            # Función que hace que se mueva el agente
             self.volar_aeropuerto(self.velocidad, self.control_colisiones)
-            self.kms_recorridos += self.distancia_km
             self.tiempo_vuelo += self.velocidad # es un ratio distancia / velocidad
 
-
-
+    # Devuelve cadena con los principales datos del avión para mostrar por pantalla
     def imprimir_agente(self):
         return "AVION ID: " + str(self.id) + " | origen: " + str(self.origen) + " | destino: " +\
             str(self.destino) + " | Tiempo espera: " + str(self.tiempo_espera) +\

@@ -5,14 +5,6 @@ from agents import Aeropuerto, Avion
 
 VERBOSE = False # Print-monitoring
 
-def calcular_kms(model):
-    agent_kms = 0
-    for a in model.schedule.agents:
-        if type(a) is Avion:
-            agent_kms += a.kms_recorridos
-    # return the sum of agents' savings
-    return agent_kms
-
 def calcular_tiempo(model):
     agent_tiempo = 0
     for a in model.schedule.agents:
@@ -94,7 +86,6 @@ class TraficoAereo(mesa.Model):
         self.grid = mesa.space.MultiGrid(self.width, self.height, torus=False)
         self.datacollector = mesa.DataCollector(
             {
-                "Kms recorridos": calcular_kms,
                 "Tiempo empleado": calcular_tiempo,
             }
         )
@@ -108,7 +99,7 @@ class TraficoAereo(mesa.Model):
             y = self.random.randrange(self.height)
             pistas = random.randint(pistas_min, pistas_max)
             tiempo_despegue_aterrizaje = tiempo_despegue_aterrizaje
-            aeropuerto = Aeropuerto(self.next_id(), (x, y), pistas, tiempo_despegue_aterrizaje, self, False)
+            aeropuerto = Aeropuerto(self.next_id(), (x, y), pistas, tiempo_despegue_aterrizaje, self)
             # Mostramos por consola las variables
             print(aeropuerto.imprimir_agente())
             self.listado_aeropuertos += aeropuerto.imprimir_agente() + '<br>'
@@ -140,7 +131,8 @@ class TraficoAereo(mesa.Model):
                 velocidad = round(self.DISTANCIA_KM / random.randrange(self.VELOCIDAD_MIN, self.VELOCIDAD_MAX), 1)
             else:
                 velocidad = round(self.DISTANCIA_KM / self.velocidad_media, 1)
-            avion = Avion(self.next_id(), (x, y), origen, destino, (x_destino, y_destino), tiempo_espera_avion, velocidad, self.DISTANCIA_KM, self.control_colisiones, self, False)
+            avion = Avion(self.next_id(), (x, y), origen, destino, (x_destino, y_destino), tiempo_espera_avion,
+                          velocidad, self.DISTANCIA_KM, self.control_colisiones, self, False)
             # Mostramos por consola las variables
             print(avion.imprimir_agente())
             self.listado_aviones += avion.imprimir_agente() + "<br>"
