@@ -4,17 +4,17 @@ Esta propuesta se enmarca como trabajo práctico de la asignatura “Sistemas Mu
 
 ## 2. Objetivos 
 
-El principal objetivo de este trabajo es el desarrollo de un modelo, a través de un sistema multiagente (SMA), que permita simular el comportamiento del tráfico de vehículos en un entorno urbano bajo diferentes escenarios. 
+El principal objetivo de este trabajo es el desarrollo de un modelo, a través de un sistema multiagente (SMA), que permita simular el comportamiento del tráfico de aéreo de pasajeros de vuelos comerciales bajo diferentes escenarios.
 
 Adicionalmente, el trabajo tiene como objetivo complementario la aplicación práctica de los conocimientos teóricos adquiridos en la asignatura y la utilización de herramientas específicas para la implantación de sistemas multiagente. 
 
 ## 3. Plazo de realización y equipo de trabajo 
 
-El plazo para la realización del modelo es hasta el XX de septiembre de 2023. El trabajo se realizará de forma individual. 
+El plazo para la realización del modelo es hasta el 15 de septiembre de 2023. El trabajo se realizará de forma individual. 
 
 ## 4. Entregable 
 
-El entregable de la presente propuesta será el código de implementación del sistema multiagente para la simulación del XXXXXXXXX. Además, este se presentará al equipo docente de forma práctica. 
+El entregable de la presente propuesta será el código fuente de la aplicación y un breve resumen (alrededor de una página) explicando su funcionamiento, agentes que lo componen, etc. Además, este se presentará al equipo docente de forma práctica. 
 
 ## 5. Descripción de las características generales del sistema 
 
