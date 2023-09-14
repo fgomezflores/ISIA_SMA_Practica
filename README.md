@@ -1,4 +1,4 @@
-# Sistemas Multiagente - Modelo para la simulación del tráfico aéreo con MESA y Python
+# Sistemas Multiagente - Modelo para la simulación del tráfico aéreo con Mesa y Python
 
 Propuesta de trabajo práctico para el desarrollo de un sistema multiagente para la simulación del tráfico aéreo utilizando Python y Mesa.
 Al ejecutar run.py se solicita el tamaño de la cuadrícula del mundo virtual (ancho y alto):
