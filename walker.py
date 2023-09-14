@@ -51,15 +51,15 @@ class Walker(mesa.Agent):
                   )
         return ret
 
-    def volar_aeropuerto(self, velocidad, control_colisiones):
+    def volar_aeropuerto(self, control_colisiones):
 
-        # Si es viaje de ida se vuela aeropuerto de origen -> destino
-        # Sino destino -> origen
+        # Si es viaje de ida se vuela aeropuerto de salida -> llegada
+        # Sino llegada -> salida
 
         if self.viaje_ida:
-            next_moves = self.model.grid.get_neighborhood(self.pos_destino, self.moore, True)
+            next_moves = self.model.grid.get_neighborhood(self.pos_llegada, self.moore, True)
         else:
-            next_moves = self.model.grid.get_neighborhood(self.pos_origen, self.moore, True)
+            next_moves = self.model.grid.get_neighborhood(self.pos_salida, self.moore, True)
 
         # Reducir posiciones de la cuadricula a los más cercanos
         min_dist = min(get_distance(self.pos, pos) for pos in next_moves)
@@ -79,8 +79,8 @@ class Walker(mesa.Agent):
             # esta activado este parametro (solo en ruta, no se tiene en cuenta en aeropuerto)
             if self.control_colisiones:
                 # Comprobamos que el siguente movimiento no es un avion
-                # y que no se corresponde con el origen o destino (por si hay más aviones estacionados)
-                if self.esta_ocupado(next_move) and self.pos_origen != next_move and self.pos_destino != next_move:
+                # y que no se corresponde con el salida o llegada (por si hay más aviones estacionados)
+                if self.esta_ocupado(next_move) and self.pos_salida != next_move and self.pos_llegada != next_move:
                     next_moves_colision = self.model.grid.get_neighborhood(self.pos, self.moore, True)
                     final_candidates_colision = [
                         pos for pos in next_moves_colision if not self.esta_ocupado(pos)
@@ -92,14 +92,14 @@ class Walker(mesa.Agent):
             self.pos = next_move
         # Si la distancia minima es 0 es que ha llegado
         elif min_dist == 0:
-            if self.viaje_ida: # vuelo origen -> destino
-                self.model.grid.move_agent(self, self.pos_destino)
-                self.pos = self.pos_destino
+            if self.viaje_ida: # vuelo salida -> llegada
+                self.model.grid.move_agent(self, self.pos_llegada)
+                self.pos = self.pos_llegada
                 self.viaje_ida = False
                 self.en_vuelo = False
-            else: # vuelo destino -> origen
-                self.model.grid.move_agent(self, self.pos_origen)
-                self.pos = self.pos_origen
+            else: # vuelo llegada -> salida
+                self.model.grid.move_agent(self, self.pos_salida)
+                self.pos = self.pos_salida
                 self.viaje_ida = True
                 self.en_vuelo = False
 

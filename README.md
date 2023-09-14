@@ -39,9 +39,9 @@ El modelo se basa en sistema de coordenadas cartesianas, donde se ubicarán los 
 
 Se contemplan dos tipos de agentes: 
 
-1) Aeropuertos, son el origen y destino de cada vuelo. 
+1) Aeropuertos, son el salida y llegada de cada vuelo. 
 
-2) Aviones, cada avión cubrirá siempre la misma ruta entre los aeropuertos de salida y llegada. Así, una vez que el avión llegue a su destino, transcurrido un determinado tiempo, realizará la ruta de vuelta y así sucesivamente durante toda la simulación 
+2) Aviones, cada avión cubrirá siempre la misma ruta entre los aeropuertos de salida y llegada. Así, una vez que el avión llegue a su llegada, transcurrido un determinado tiempo, realizará la ruta de vuelta y así sucesivamente durante toda la simulación 
 
 ![image](https://github.com/fgomezflores/ISIA_SMA_Practica/assets/122975434/03e3b023-da35-41b2-a702-7c605b1a9bb8)
 
@@ -55,7 +55,7 @@ Leyenda:
 
 tsem	=	tiempo de espera del semáforo. 
 
-tdesp	=	tiempo de espera cuando se llega a casilla sin origen. 
+tdesp	=	tiempo de espera cuando se llega a casilla sin salida. 
 
 tret	=	tiempo de espera cuando hay retención. 
 

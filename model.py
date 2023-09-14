@@ -5,16 +5,25 @@ from agents import Aeropuerto, Avion
 
 VERBOSE = False # Print-monitoring
 
-def calcular_tiempo(model):
-    agent_tiempo = 0
+# Función auxiliar para el datacollector y su visualización gráfica
+def calcular_tiempo_espera_total(model):
+    total = 0
     for a in model.schedule.agents:
         if type(a) is Avion:
-            agent_tiempo += a.tiempo_vuelo
-    # return the sum of agents' savings
-    return agent_tiempo
+            total += a.tiempo_espera_total
+    return total
+
+def calcular_tiempo_velocidad_total(model):
+    total = 0
+    for a in model.schedule.agents:
+        if type(a) is Avion:
+            total += a.tiempo_velocidad_total
+    return total
+
 
 class TraficoAereo(mesa.Model):
-    # Variables con texto que se mostrará en la visualización HTML del modelo
+
+    # Variables auxiliares con texto que se mostrará en la visualización HTML del modelo
     listado_aeropuertos = ""
     listado_aviones = ""
 
@@ -86,7 +95,8 @@ class TraficoAereo(mesa.Model):
         self.grid = mesa.space.MultiGrid(self.width, self.height, torus=False)
         self.datacollector = mesa.DataCollector(
             {
-                "Tiempo empleado": calcular_tiempo,
+                "Espera": calcular_tiempo_espera_total,
+                "Velocidad": calcular_tiempo_velocidad_total,
             }
         )
 
@@ -95,31 +105,36 @@ class TraficoAereo(mesa.Model):
 
         # Creacion de los aeropuertos:
         for i in range(self.aeropuertos_inicial):
-            x = self.random.randrange(self.width)  # posicionamiento aleatorio
+            # Posicionamiento aleatorio en la cuadrícula
+            x = self.random.randrange(self.width)
             y = self.random.randrange(self.height)
+            # Número de pistas aleatorio entre los rangos de los parámetros
             pistas = random.randint(pistas_min, pistas_max)
+            # Tiempo de aterrizaje y despegue establecido
             tiempo_despegue_aterrizaje = tiempo_despegue_aterrizaje
+            #  Creación del agentge
             aeropuerto = Aeropuerto(self.next_id(), (x, y), pistas, tiempo_despegue_aterrizaje, self)
             # Mostramos por consola las variables
             print(aeropuerto.imprimir_agente())
             self.listado_aeropuertos += aeropuerto.imprimir_agente() + '<br>'
-
+            # Se situa en la cuadrícula
             self.grid.place_agent(aeropuerto, (x, y))
+            # Se añade al planificador
             self.schedule.add(aeropuerto)
 
         # Creacion de los aviones:
         for i in range(self.aviones_inicial):
-            # Seleccion de aeropuerto origen de forma aleatoria
-            origen = self.random.randint(1, aeropuertos_inicial)
-            # Seleccion aeropuerto de destino distinto que el de origen
-            destino = self.random.randint(1, aeropuertos_inicial)
-            while destino == origen:
-                destino = self.random.randint(1, aeropuertos_inicial)
-            # posicionamiento según aeropuerto de origen que se le ha asignado
-            x = self.schedule._agents[origen].pos[0]
-            y = self.schedule._agents[origen].pos[1]
-            x_destino = self.schedule._agents[destino].pos[0]
-            y_destino = self.schedule._agents[destino].pos[1]
+            # Seleccion de aeropuerto salida de forma aleatoria
+            salida = self.random.randint(1, aeropuertos_inicial)
+            # Seleccion aeropuerto de llegada distinto que el de salida
+            llegada = self.random.randint(1, aeropuertos_inicial)
+            while llegada == salida:
+                llegada = self.random.randint(1, aeropuertos_inicial)
+            # posicionamiento según aeropuerto de salida que se le ha asignado
+            x = self.schedule._agents[salida].pos[0]
+            y = self.schedule._agents[salida].pos[1]
+            x_llegada = self.schedule._agents[llegada].pos[0]
+            y_llegada = self.schedule._agents[llegada].pos[1]
             # Velocidad: valor distancia cuadricula / velocidad del avion
             velocidad = 0
             # Si velocidad = 1 el avión recorre en 1 min (1 step) la distancia de la cuadricula
@@ -131,8 +146,8 @@ class TraficoAereo(mesa.Model):
                 velocidad = round(self.DISTANCIA_KM / random.randrange(self.VELOCIDAD_MIN, self.VELOCIDAD_MAX), 1)
             else:
                 velocidad = round(self.DISTANCIA_KM / self.velocidad_media, 1)
-            avion = Avion(self.next_id(), (x, y), origen, destino, (x_destino, y_destino), tiempo_espera_avion,
-                          velocidad, self.DISTANCIA_KM, self.control_colisiones, self, False)
+            avion = Avion(self.next_id(), (x, y), salida, llegada, (x_llegada, y_llegada), tiempo_espera_avion,
+                          velocidad, self.control_colisiones, self, False)
             # Mostramos por consola las variables
             print(avion.imprimir_agente())
             self.listado_aviones += avion.imprimir_agente() + "<br>"
