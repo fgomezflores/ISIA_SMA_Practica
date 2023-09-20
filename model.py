@@ -168,8 +168,8 @@ class TraficoAereo(mesa.Model):
                 print(
                     [
                         self.schedule.time,
-                        self.schedule.get_type_count(Aeropuerto),
-                        self.schedule.get_type_count(Avion),
+                        #self.schedule.get_type_count(Aeropuerto),
+                        #self.schedule.get_type_count(Avion),
                     ]
                 )
         else:
